@@ -124,6 +124,8 @@ STATIC_DIRS = {
     os.path.join(BASE_DIR,"static"),
     }
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 #LOGIN_URL='siteUser:login'
 
 #LOGIN_REDIRECT_URL='chapter:chapter_list'
