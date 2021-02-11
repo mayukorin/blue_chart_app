@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>
+        <a href="{% url 'blue_chart_app:cause_tag_list' latest_connects_with_cause_tag.0.problem.problem_group.section.id %}">
+            「§{{latest_connects_with_cause_tag.0.problem.problem_group.section__number}} {{latest_connects_with_cause_tag.0.problem.problem_group.section.name}}」の原因タグ一覧
+        </a> > 
+        原因タグ「{{latest_connects_with_cause_tag.0.cause_tag.content}}」
+    </p>
+    <h2>原因タグ「{{latest_connects_with_cause_tag.0.cause_tag.content}}」がついている問題一覧</h2>
+    <table class="table table-striped">
+        <tbody>
+            {% for latest_connect in latest_connects_with_cause_tag %}
+                <tr>
+                    <td>{{latest_connect.problem.problem_group.section.chapter.subject.name}}
+                    <td>§{{latest_connect.problem.problem_group.section.number}}</td>
+                    <td>{{latest_connect.problem.name }}</td>
+                    <td><a href="{% url 'blue_chart_app:problem_show' latest_connect.problem.id %}">問題詳細を見る</a></td>
+                    <td><a href="{% url 'blue_chart_app:answer_list_with_cause_tag' latest_connect.problem.id latest_connect.cause_tag.id %}">{{latest_connect.get_count_of_not_overcome_answer}}件の間違い</a></td>
+                </tr> 
+                
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

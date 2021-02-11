@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>
+        <a href = "{% url 'blue_chart_app:chapter_list' %}">
+            章一覧
+        </a> > 
+        <a href="{% url 'blue_chart_app:section_list' problem.problem_group.section.chapter.id %}">
+            {{problem.problem_group.section.chapter.subject.name}} 第{{problem.problem_group.section.chapter.number}}章 {{ problem.problem_group.section.chapter.name }}
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_group_list' problem.problem_group.section.id %}">
+            §{{problem.problem_group.section.number}} {{problem.problem_group.section.name}}
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_list' problem.problem_group.id %}">
+            {{problem.problem_group.name}}{{problem_group.name}}（{{problem.problem_group.problems.all|length}}題）
+        </a> > 
+        {{problem.name}}
+    </p>
+    <h2>{{problem.name}}の詳細ページ</h2><br>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>範囲</td>
+                <td>{{problem.problem_group.section.chapter.subject.name}} §{{problem.problem_group.section.number}} {{problem.problem_group.section.name}}</td>
+            </tr>
+            <tr>
+                <td>問題名</td>
+                <td>{{problem.name}}</td>
+            </tr>
+            <tr>
+                <td>詳細</td>
+                <td>
+                    {% if problem.problem_group.number > 0 %}
+                        {{problem.problem_group.title}}
+                    {% else %}
+                        ー
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="index">類似問題</p>
+    {% if problem.from_similars.all|length != 0 or problem.to_similars.all|length != 0 %}
+        {% for fs in problem.from_similars.all %}
+            
+            {% if fs.to_problem.problem_group.number < 0 %}
+                <a href="{% url 'blue_chart_app:problem_show' fs.to_problem.id %}">
+                    {{fs.to_problem.problem_group.section.chapter.subject.name}} §{{fs.to_problem.problem_group.section.number}} {{fs.to_problem.name}}
+                </a>&nbsp;
+            {% else %}
+                <a href="{% url 'blue_chart_app:problem_show' fs.to_problem.id %}">{{fs.to_problem.name}}</a>&nbsp;
+            {% endif %}
+        {% endfor %}
+        {% for ts in problem.to_similars.all %}
+            {% if ts.from_problem.problem_group.number < 0 %}
+                <a href="{% url 'blue_chart_app:problem_show' ts.from_problem.id %}">
+                    {{ts.from_problem.problem_group.section.chapter.subject.name}} §{{ts.from_problem.problem_group.section.number}} {{ts.from_problem.name}}
+                </a>&nbsp;
+            {% else %}
+                <a href="{% url 'blue_chart_app:problem_show' ts.from_problem.id %}">{{ts.from_problem.name}}</a>&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        なし
+    {% endif %}
+    <p class="index">基礎問題</p>
+    {% if problem.to_develops.all|length != 0 %}
+        {% for td in problem.to_develops.all %}
+            {% if develop.from_problem.problem_group.number < 0 %}
+                <a href="{% url 'blue_chart_app:problem_show' td.from_problem.id %}">
+                    {{td.from_problem.problem_group.section.chapter.subject.name}} §{{td.from_problem.problem_group.section.number}} {{td.from_problem.name}}
+                </a>&nbsp;
+            {% else %}
+                <a href="{% url 'blue_chart_app:problem_show' td.from_problem.id %}">{{td.from_problem.name}}</a>&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        なし
+    {% endif %}
+    <p class="index">発展問題</p>
+    {% if problem.from_develops.all|length != 0 %}
+        {% for fd in problem.from_develops.all %}
+            {% if fd.to_problem.problem_group.number < 0 %}
+                <a href="{% url 'blue_chart_app:problem_show' fd.to_problem.id %}">
+                    {{fd.to_problem.problem_group.section.chapter.subject.name}} §{{fd.to_problem.problem_group.section.number}} {{fd.to_problem.name}}
+                </a>&nbsp;
+            {% else %}
+                <a href="{% url 'blue_chart_app:problem_show' fd.to_problem.id %}">{{fd.to_problem.name}}</a>&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        なし
+    {% endif %}
+    <br>
+    <p><a href="{% url 'blue_chart_app:answer_list_with_problem' problem.id %}">勉強記録一覧を見る</a></p>
+    <p class="index">評価タグ</p>
+    <p><a href="{% url 'blue_chart_app:evaluate_register' problem.id %}">評価タグを登録する</a></p>
+    {% if problem.evaluates.all|length != 0 %}
+        {% for ev in problem.evaluates.all %}
+            <div>
+                <span class="tag tag_type{{ev.evaluation_tag.evaluation_type.id}}">
+                    {{ev.evaluation_tag.content}}
+                </span>
+                &nbsp;&nbsp;
+                {% if request.user.id == ev.evaluate_user.id %}
+                    <a  class="delete" href="#" onclick="confirmDestroy({{ev.id}},'evaluate')">取り消し</a>
+                    <form id="form_evaluate_{{ev.id}}" method="post" action="{% url 'blue_chart_app:evaluate_delete' ev.id %}">
+                        {% csrf_token %}
+                    </form>
+                {% endif %}
+            </div>
+            <span class="evaluation_tag_evaluate_user">{{ev.evaluate_user.username}}</span>
+            {% if ev.comments_for_evaluate.all|length == 0 %}
+                <div class="explain">
+                    <div><a href="{% url 'blue_chart_app:comment_for_evaluate_register' ev.id %}">この評価タグへのコメントを追加する</a></div>
+                </div>
+            {% else %}
+                <div class="explain">
+                    <div>{{ev.comments_for_evaluate.all|length}}件のコメント&nbsp;<i id="bar_evaluate{{ev.id}}" class="comment_for_evaluate fas fa-chevron-down"></i></div> 
+                </div>
+                <div class="comment_for_evaluate" id="comment_for_evaluate{{ev.id}}">
+                    <p><a href="{% url 'blue_chart_app:comment_for_evaluate_register' ev.id %}">この評価タグへのコメントを追加する</a></p>
+                    <table class="table table-bordered">
+                        {% for comment_for_evaluate in ev.comments_for_evaluate.all %}
+                            <tr>
+                                <td>
+                                    <span class="comment_username">{{comment_for_evaluate.comment_user.username}}</span>
+                                    &nbsp;&nbsp;{{comment_for_evaluate.updated_at|date:"Y/m/d H:i"}}
+                                    {% if comment_for_evaluate.updated_at != comment_for_evaluate.created_at %} (編集済み）{% endif %}
+                                    {% if request.user.id == comment_for_evaluate.comment_user.id %}
+                                        &nbsp;<a href="{% url 'blue_chart_app:comment_for_evaluate_update' comment_for_evaluate.id %}">編集</a>
+                                        &nbsp;&nbsp;<a  class="delete" href="#" onclick="confirmDestroy({{comment_for_evaluate.id}},'evaluate_comment')">削除</a>
+                                        <form id="form_evaluate_comment_{{comment_for_evaluate.id}}" method="post" action="{% url 'blue_chart_app:comment_for_evaluate_delete' comment_for_evaluate.id %}">
+                                            {% csrf_token %}
+                                        </form>
+                                    {% endif %}
+                                    <br>
+                                    {{comment_for_evaluate.content|linebreaksbr}} 
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+            <br><hr>
+        {% endfor %}
+    {% else %}
+        評価タグはまだありません
+    {% endif %}
+    <script>
+        $('.comment_for_evaluate').on('click', (e) => {
+          
+           id = '#' + e.target.id
+           comment_for_evaluate_id = id.replace('bar_evaluate', 'comment_for_evaluate')
+           target_class = ''
+           
+           if (e.target.className == 'comment_for_evaluate fas fa-chevron-down') {
+               target_class = 'wcomment_for_evaluate fas fa-chevron-up'
+               $(comment_for_evaluate_id).show()
+           } else {
+               target_class = 'comment_for_evaluate fas fa-chevron-down'
+               $(comment_for_evaluate_id).hide()
+           }
+           
+          
+           $(id).attr('class', target_class)
+       
+       });
+
+       function confirmDestroy(id, type) {
+            if(confirm("本当に削除してよろしいですか？")) {
+                id = 'form_'+type+'_'+id;
+                form = document.getElementById(id)
+                
+                form.submit();                
+            }
+        }
+
+    </script>
+    
+    
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if section %}
+    <h2>「{{section.name}}」の原因タグ一覧</h2>
+    {% else %}
+    <h2>原因タグ一覧</h2>
+    {% endif %}
+    <br>
+    <h3>未克服原因タグ</h3>
+    {% if not_overcome_cause_tags|length != 0 %}
+        {% for not_overcome_cause_tag in not_overcome_cause_tags %}
+            <div>
+                <span class="tag tag_type{{not_overcome_cause_tag.cause_tag__cause_type__id}}">
+                    {{not_overcome_cause_tag.cause_tag__content}}
+                </span>
+                &nbsp;
+                {% if section %}
+                    <a href="{% url 'blue_chart_app:problem_list_with_cause_tag' not_overcome_cause_tag.cause_tag__id  section.id %}">{{not_overcome_cause_tag.total}}問</a>
+                {% else %}
+                    <a href="{% url 'blue_chart_app:problem_list_with_cause_tag' not_overcome_cause_tag.cause_tag__id  0 %}">{{not_overcome_cause_tag.total}}問</a>
+                {% endif %}
+            </div>
+            <br>
+        {% endfor %}
+    {% else %}
+        未克服原因タグはまだありません
+    {% endif %}
+    <h3>克服済み原因タグ</h3>
+    {% if overcome_cause_tags|length != 0 %}
+            {% for overcome_cause_tag in overcome_cause_tags %}
+                <div>
+                    <span class="tag tag_type{{overcome_cause_tag.cause_tag__cause_type__id}}">
+                        {{overcome_cause_tag.cause_tag__content}}
+                    </span>
+                    &nbsp;
+                    {% if section %}
+                        <a href="{% url 'blue_chart_app:problem_list_with_cause_tag' overcome_cause_tag.cause_tag__id  section.id %}">{{overcome_cause_tag.total}}問</a>
+                    {% else %}
+                        <a href="{% url 'blue_chart_app:problem_list_with_cause_tag' overcome_cause_tag.cause_tag__id  0 %}">{{overcome_cause_tag.total}}問</a>
+                    {% endif %}
+                </div>
+                <br>
+            {% endfor %}
+    {% else %}
+        克服済み原因タグはまだありません
+    {% endif %}
+{% endblock %}

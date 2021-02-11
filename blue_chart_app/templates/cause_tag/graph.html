@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+    <ul class="tabs-menu">
+            {% for chapter in chapters %}
+                <li><a href="#tabs-{{chapter.id}}" data-id="{{chapter.id}}">{{chapter.name}}</a></li>
+            {% endfor %}
+    </ul>
+    <section class="tabs-content">
+        {% for chapter in chapters %}
+            <section id="tabs-{{chapter.id}}">
+                <p>
+                <canvas id="myBarChart{{chapter.id}}"></canvas><br>
+                <div id="x_label_explain{{chapter.id}}">
+                </div>
+                </p>
+            </section>
+        {% endfor %}
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script>
+        function drawGraph(chapter_id) {
+
+            const url = `/cause_tag/connects_count/?chapter_id=${chapter_id}`;
+            fetch(url)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(response => {
+                        const connects_count = response.connects_count;
+                        var x_label = []
+                        $.each(response.sections_name, function(index, value) {
+                            
+                            x_label.push(index+1);
+                            var section_url = `/cause_tag/list/${response.sections_id[index]}`;
+                            $(`#x_label_explain${chapter_id}`).append(`<a href=${section_url}>${index+1}：${value}</a><br>`)
+                            
+                            console.log(response.sections_id[index]);
+                        })
+                        var ctx = document.getElementById(`myBarChart${chapter_id}`);
+                        var myBarChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: x_label,
+                                datasets: [
+                                    {
+                                    label: '技術',
+                                    data: connects_count['1'],
+                                    backgroundColor: "rgba(219,39,91,0.5)"
+                                    },{
+                                    label: '知識',
+                                    data: connects_count['2'],
+                                    backgroundColor: "rgba(255,183,76,0.5)"
+                                    },{
+                                    label: '思考',
+                                    data: connects_count['3'],
+                                    backgroundColor: "rgba(130,201,169,0.5)"
+                                    }
+                                ]
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: '未克服タグ付き解答数'
+                                },
+                                scales: {
+                                    yAxes: [{
+                                    ticks: {
+                                        suggestedMax: 100,
+                                        suggestedMin: 0,
+                                        stepSize: 10,
+                                        callback: function(value, index, values){
+                                        return  value 
+                                        }
+                                    }
+                                    }]
+                                },
+                            }
+                        });
+                    });
+
+            }
+            
+            const showTab = (selector) => {
+                    // 引数selectorの中身をコンソールで確認する
+                    console.log(selector);
+
+                    /* 1. タブの選択状態のリセット */
+
+                    // いったん、すべての.tabs-menu > liからactiveクラスを削除する
+                    $('.tabs-menu > li').removeClass('active');
+
+                    // いったん、すべての.tabs-content > sectionを非表示にする
+                    $('.tabs-content > section').hide();
+
+                    /* 2. 選択されたタブの表示 */
+
+                    // .tabs-menu liのうち、selectorに該当するものにだけactiveクラスを付ける
+                    $(`.tabs-menu a[href="${selector}"]`)
+                        .parent('li')
+                        .addClass('active');
+
+                    // .tabs-content > sectionのうち、selectorに該当するものだけを表示する
+                    $(selector).show();
+            };
+
+            // タブがクリックされたらコンテンツを表示
+            $('.tabs-menu a').on('click', (e) => {
+            // hrefへのページ遷移を止める
+            e.preventDefault();
+            console.log($(e.target).data('id'));
+            drawGraph($(e.target).data('id'));
+
+            // hrefの値を受け取った後、showTab()関数に渡す。e.targetはクリックされたタブ（.tabs-menu a）を表す
+            const selector = $(e.target).attr('href');
+            showTab(selector);
+            });
+
+            // 初期状態として1番目のタブを表示
+            drawGraph(1);
+            console.log('aa');
+            showTab('#tabs-1');
+    </script>
+    
+
+{% endblock %}

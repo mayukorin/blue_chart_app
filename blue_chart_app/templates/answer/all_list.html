@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>{{user.reference_user.username}}の勉強記録一覧</h2><br>
+    {% if answers|length != 0 %}
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <th>問題</th>
+                    <th>解答予定日</th>
+                    <th>解答日</th>
+                    <th>解答状況</th>
+                </tr>
+                {% for answer in answers %}
+                <tr data-href="{% url 'blue_chart_app:answer_show' answer.id %}">
+                    <td>
+                        {% if answer.problem.problem_group.number < 0 %}
+                            {{answer.problem.problem_group.section.chapter.subject.name}}
+                            §{{answer.problem_group.section.number}} {{answer.to_problem.name}} {% else %}
+                            {{answer.problem.name}} {% endif %} </td>
+                    <td>{{answer.solve_plan_date|date:"Y/m/d H:i"}}</td>
+                    <td>{{answer.solve_date|date:"Y/m/d H:i"}}</td>
+                    <td>
+                        {% if answer.correct_situation.id == 2 %}
+                        <i class="far fa-circle maru"></i>
+                        {% elif answer.correct_situation.id == 3 %}
+                        <i class="batu fas fa-times"></i>
+                        {% else %}
+                        {{answer.correct_situation.situation}}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        まだ勉強記録はありません
+    {% endif %}
+    <script>
+        $('tr[data-href]').addClass('clickable')
+            .click(function (e) {
+                if (!$(e.target).is('a')) {
+                    window.location = $(e.target).closest('tr').data('href');
+                };
+            });
+    </script>
+{% endblock %}

@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>
+        <a href = "{% url 'blue_chart_app:chapter_list' %}">
+            章一覧
+        </a> > 
+        <a href="{% url 'blue_chart_app:section_list' answer.problem.problem_group.section.chapter.id %}">
+            {{answer.problem.problem_group.section.chapter.subject.name}} 
+            第{{answer.problem.problem_group.section.chapter.number}}章 
+            {{ answer.problem.problem_group.section.chapter.name }}
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_group_list' answer.problem.problem_group.section.id %}">
+             §{{answer.problem.problem_group.section.number}} {{answer.problem.problem_group.section.name}}
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_list' answer.problem.problem_group.id %}">
+            {{answer.problem.problem_group.name}}{{answer.problem_group.name}}（{{answer.problem.problem_group.problems.all|length}}題）
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_show' answer.problem.id %}">
+            {{answer.problem.name}}
+        </a> > 
+        <a href="{% url 'blue_chart_app:answer_list_with_problem' answer.problem.id %}">
+            勉強記録一覧
+        </a> > 
+        {{answer.solve_plan_date|date:"Y年m月d日"}}
+    </p>
+    <h2>{{answer.solve_plan_date|date:"Y年m月d日"}}の勉強記録詳細</h2>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>範囲</td>
+                <td>
+                    {{answer.problem.problem_group.section.chapter.subject.name}} 
+                    §{{answer.problem.problem_group.section.number}} 
+                    {{answer.problem.problem_group.section.name}}
+                </td>
+            </tr>
+            <tr>
+                <td>問題名</td>
+                <td>{{answer.problem.name}}</td>
+            </tr>
+            <tr>
+                <td>詳細</td>
+                <td>{{answer.problem.problem_group.title}}</td>
+            </tr>
+            <tr>
+                <td>解答予定日</td>
+                <td>{{answer.solve_plan_date|date:"Y/m/d H:i"}}</td>
+            </tr>
+            <tr>
+                <td>解答日</td>
+                <td>
+                    {% if answer.solve_date != None %}
+                       {{answer.solve_date|date:"Y/m/d H:i"}}
+                    {% else %}
+                        ー
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>解答状況</td>
+                <td>
+                    {{answer.correct_situation.situation}}
+                </td>
+            </tr>
+            <tr>
+                <td>解答時間</td>
+                <td>
+                     {% if answer.actual_time != 0 and answer.actual_time != None %}
+                        {{answer.actual_time}}分
+                    {% else %}
+                        ー
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p><a href="{% url 'blue_chart_app:answer_update' answer.id %}">勉強記録を編集する</a></p>
+    <p>
+        {% if answer.student.id == request.user.id %}
+            <a href="#" onclick="confirmDestroy({{answer.id}}, 'answer')">解答情報を削除する</a>
+            <form id="form_answer_{{answer.id}}" method="post" action="{% url 'blue_chart_app:answer_delete' answer.id %}">
+                {% csrf_token %}
+            </form>
+        {% endif %}
+    </p><br>
+    {% if answer.solve_date != None %}
+        <h3>原因タグ</h3><br>
+        <div><a href="{% url 'blue_chart_app:connect_register' answer.id %}">原因タグを新規登録する</a></div><br>
+            {% if answer.connects.all|length == 0 %}
+                <div>
+                    原因タグはまだありません
+                </div>
+            {% else %}
+                {% for connect in answer.connects.all %}
+                    <div>
+                        <div>
+                            <span class="tag tag_type{{connect.cause_tag.cause_type.id}} {% if connect.is_overcome == 1 %} overcome{{connect.cause_tag.cause_type.id}} {% endif %}">
+                                <a class="cause_tag_link" href="{% url 'blue_chart_app:answer_list_with_cause_tag' connect.answer.problem.id connect.cause_tag.id %}">
+                                    {{connect.cause_tag.content}}
+                                </a>
+                            </span>
+                            &nbsp;&nbsp;
+                            {% if request.user.id == connect.connect_user.id %}
+                                <a href="{% url 'blue_chart_app:connect_is_overcome_change' connect.id %}">
+                                    {% if connect.is_overcome == False %}
+                                        克服
+                                    {% else %}
+                                        未克服にする
+                                    {% endif %}
+                                </a>
+                                &nbsp;&nbsp;
+                                <a  class="delete" href="#" onclick="confirmDestroy({{connect.id}},'connect')">取り消し</a>
+                                <form id="form_connect_{{connect.id}}" method="post" action="{% url 'blue_chart_app:connect_delete' connect.id %}">
+                                    {% csrf_token %}
+                                </form>
+                            {% endif %}
+                        </div>
+                        <span class="cause_tag_connect_user">
+                            {{connect.connect_user.username}}
+                        </span>
+                        {% if connect.comments_for_connect.all|length == 0 %}
+                            <div class="explain">
+                                <div><a href="{% url 'blue_chart_app:comment_for_connect_register' connect.id %}">この原因タグへのコメントを追加する</a></div>
+                            </div>
+                        {% else %}
+                        <div class="explain">
+                            <div>
+                                {{connect.comments_for_connect.all|length}}件のコメント&nbsp;<i id="comments_for_connect_bar{{connect.id}}" class="comments_for_connect_bar fas fa-chevron-down"></i>
+                            </div> 
+                        </div>
+                        <div class="comments_for_connect" id="comments_for_connect{{connect.id}}">
+                            <p><a href="{% url 'blue_chart_app:comment_for_connect_register' connect.id %}">この原因タグへのコメントを追加する</a></p>
+                            <table class="table table-bordered">
+                                {% for cc in connect.comments_for_connect.all %}
+                                    <tr>
+                                        <td>
+                                        <span class="comment_username">{{cc.comment_user.username}}</span>
+                                            &nbsp;&nbsp;{{cc.updated_at|date:"Y/m/d H:i"}}
+                                            {% if cc.updated_at != cc.created_at %} (編集済み）{% endif %}
+                                            {% if request.user.id == cc.comment_user.id %}
+                                                &nbsp;<a href="{% url 'blue_chart_app:comment_for_connect_update' cc.id %}">編集</a>&nbsp;&nbsp;<a  class="delete" href="#" onclick="confirmDestroy({{cc.id}},'comment_for_connect')">削除</a>
+                                                <form id="form_comment_for_connect_{{cc.id}}" method="post" action="{% url 'blue_chart_app:comment_for_connect_delete' cc.id %}">
+                                                    {% csrf_token %}
+                                                </form>
+                                            {% endif %}
+                                            <br>
+                                            {{cc.content|linebreaksbr}} 
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        {% endif %}
+                    </div><hr><br>
+                {% endfor %}
+            {% endif %}
+        <br>
+    {% endif %}
+    <h3>解答写真</h3><br>
+    <div class="content">
+        <div><a href="{% url 'blue_chart_app:answer_photo_register' answer.id %}">解答写真を新規登録する</a></div><br>
+        {% if answer.answer_photo.all|length == 0 %}
+            解答写真はまだありません
+        {% else %}
+            {% for ap in answer.answer_photo.all %}
+                <div>
+                    <div> 
+                        {% if ap.image.url != '' %}
+                            <img src="{{ap.image.url}}">
+                        {% else %}
+                            写真は削除されました
+                        {% endif %}
+                    </div>
+                    <span class="answer_photo_upload_user">
+                        {{ap.upload_user.username}}
+                    </span>
+                    {% if ap.comments_for_answer_photo.all|length == 0 and ap.omage.url != '' %}
+                        <div class="explain">
+                            <div><a href="{% url 'blue_chart_app:comment_for_answer_photo_register' ap.id %}">この写真へのコメントを追加する</a></div>
+                            {% if ap.image.url != '' %}
+                                <div class="download">
+                                    <a href="{{ap.image.url}}" download>ダウンロード</a>
+                                    {% if ap.upload_user.id == request.user.id %}
+                                        <a href="#" onclick="confirmDestroy({{ap.id}}, 'answer_photo')">削除</a>&nbsp;&nbsp;
+                                        <form id="form_answer_photo_{{ap.id}}" method="post" action="{% url 'blue_chart_app:answer_photo_delete' ap.id %}">
+                                            {% csrf_token %}
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="explain">
+                            <div>{{ap.comments_for_answer_photo.all|length}}件のコメント&nbsp;<i id="comments_for_answer_photo_bar{{ap.id}}" class="comments_for_answer_photo_bar fas fa-chevron-down"></i></div>
+                            {% if ap.image.url != '' %}
+                                <div class="download">
+                                    <a href="{{ap.image.url}}" download>ダウンロード</a>
+                                    {% if ap.upload_user.id == request.user.id %}
+                                        <a href="#" onclick="confirmDestroy({{ap.id}}, 'answer_photo')">削除</a>&nbsp;&nbsp;
+                                        <form id="form_answer_photo_{{ap.id}}" method="post" action="{% url 'blue_chart_app:answer_photo_delete' ap.id %}">
+                                            {% csrf_token %}
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            {% endif %}    
+                        </div>
+                        <div class="comments_for_answer_photo" id="comments_for_answer_photo{{ap.id}}">
+                            <p><a href="{% url 'blue_chart_app:comment_for_answer_photo_register' ap.id %}">この写真に対するコメントを追加する</a></p>
+                            <table class="table table-bordered">
+                                {% for ca in ap.comments_for_answer_photo.all %}
+                                    <tr>
+                                        <td>
+                                            <span class="comment_username">{{ca.comment_user.username}}</span>
+                                            &nbsp;&nbsp;{{ca.updated_at|date:"Y/m/d H:i"}}
+                                            {% if ca.updated_at != ca.created_at %} (編集済み）{% endif %}
+                                            {% if request.user.id == ca.comment_user.id %}
+                                                &nbsp;<a href="{% url 'blue_chart_app:comment_for_answer_photo_update' ca.id %}">編集</a>
+                                                &nbsp;&nbsp;<a  class="delete" href="#" onclick="confirmDestroy({{ca.id}},'comment_for_answer_photo')">削除</a>
+                                                <form id="form_comment_for_answer_photo_{{ca.id}}" method="post" action="{% url 'blue_chart_app:comment_for_answer_photo_delete' ca.id %}">
+                                                    {% csrf_token %}
+                                                </form>
+                                            {% endif %}
+                                            <br>
+                                            {{ca.content|linebreaksbr}} 
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+                <hr><br>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <br>
+    <h3>コメント</h3><br>
+    <div><a href="{% url 'blue_chart_app:comment_for_answer_register' answer.id %}">コメントを新規作成する</a></div><br>
+    {% if answer.comments_for_answer.all|length == 0 %}
+        <div>コメントはまだありません</div>
+    {% else %}
+        {% for c in answer.comments_for_answer.all %}
+            <div class="comment_for_answer">
+                <div class="comment_for_answer_detail">
+                    <span class="comment_username">{{c.comment_user.username}}</span>
+                    &nbsp;&nbsp;{{c.updated_at|date:"Y/m/d H:i"}}
+                    {% if c.updated_at != c.created_at %} (編集済み）{% endif %}
+                    {% if request.user.id == c.comment_user.id %}
+                        &nbsp;<a href="{% url 'blue_chart_app:comment_for_answer_update' c.id %}">編集</a>
+                        &nbsp;&nbsp;<a href="#" onclick="confirmDestroy({{c.id}}, 'comment_for_anwer')">削除</a>
+                        <form id="form_comment_for_anwer_{{c.id}}" method="post" action="{% url 'blue_chart_app:comment_for_answer_delete' c.id %}">
+                            {% csrf_token %}
+                        </form>
+                        
+                    {% endif %}
+                </div>
+                {{c.content|linebreaksbr}}
+            </div>
+            <br>
+        {% endfor %}
+    {% endif %}
+    <script>
+        function confirmDestroy(id, comment_type) {
+            if(confirm("本当に削除してよろしいですか？")) {
+                id = 'form_'+comment_type+'_'+id;
+                console.log(id)
+                form = document.getElementById(id);
+                form.submit();
+            }
+        }
+        
+        
+         $('.comments_for_answer_photo_bar').on('click', (e) => {
+           
+            id = '#' + e.target.id
+            commentForAnswerPhotoId = id.replace('comments_for_answer_photo_bar', 'comments_for_answer_photo')
+            targetClass = ''
+            
+            if (e.target.className == 'comments_for_answer_photo_bar fas fa-chevron-down') {
+                targetClass = 'comments_for_answer_photo_bar fas fa-chevron-up'
+                $(commentForAnswerPhotoId).show()
+            } else {
+                targetClass= 'comments_for_answer_photo_bar fas fa-chevron-down'
+                $(commentForAnswerPhotoId).hide()
+            }
+            
+           
+            $(id).attr('class', targetClass)
+        
+        });
+
+        $('.comments_for_connect_bar').on('click', (e) => {
+           
+           id = '#' + e.target.id
+           commentForConnectId = id.replace('comments_for_connect_bar', 'comments_for_connect')
+           targetClass = ''
+           
+           if (e.target.className == 'comments_for_connect_bar fas fa-chevron-down') {
+               targetClass = 'comments_for_connect_bar fas fa-chevron-up'
+               $(commentForConnectId).show()
+           } else {
+               targetClass = 'comments_for_connect_bar fas fa-chevron-down'
+               $(commentForConnectId).hide()
+           }
+           
+          
+           $(id).attr('class', targetClass)
+       
+       });
+       
+
+
+    </script>
+{% endblock %}
+

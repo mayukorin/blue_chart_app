@@ -1,0 +1,184 @@
+#main {
+    width:60%;
+    margin:auto;
+}
+
+#main table {
+    margin-top:30px;
+}
+
+#main p {
+    margin-top:10px;
+}
+/*基礎問題など*/
+.index {
+    font-weight:bold;
+}
+
+/*○×表示*/
+.maru {
+    color:green;
+
+}
+.batu {
+    color:red;
+}
+
+.content {
+    margin:auto;
+}
+
+
+
+/* 原因タグ、評価タグ系 */
+.tag {
+    color:white;
+	display: inline-block;
+	padding:5px;
+}
+
+.tag_type1 {
+	background:lightpink;
+}
+
+.tag_type2 {
+	background:orange;
+}
+
+.tag_type3{
+	background:skyblue;
+}
+.overcome1 {
+	backgroundcolor:lightpink;
+	border:solid lightgreen;
+}
+.overcome2 {
+	backgroundcolor:orange;
+	border:solid lightgreen;
+}
+.overcome3 {
+	backgroundcolor:skyblue;
+	border:solid lightgreen;
+}
+
+
+/*登録したユーザーの名前表示*/
+
+.cause_tag_connect_user, .answer_photo_upload_user, .evaluation_tag_evaluate_user {
+    color:#808080;
+}
+/*コメントを追加リンク、〇件のコメント系*/
+.explain {
+    display: flex;
+    justify-content: space-between;
+    width:100%;
+    
+}
+
+.explain div {
+    float:left;
+    padding:5px;
+}
+/*原因タグや解答写真や評価タグのコメントは最初非表示*/
+.comments_for_connect, .comments_for_answer_photo, .comment_for_evaluate {
+    display:none;
+
+    
+}
+/*コメントしたユーザー表示*/
+.comment_username {
+    color:black;
+    font-weight:bold;
+}
+
+/*原因タグをクリックした時*/
+.cause_tag_link:link { color:white; text-decoration:none }
+.cause_tag_link:visited { color:white; text-decoration:none }
+.cause_tag_link:hover { color:white; text-decoration:none }
+.cause_tag_link:active { color:white; text-decoration:none }
+
+/*解答写真系*/
+.download {
+    float:right;
+    padding:5px;
+}
+img {
+    width:100%;
+}
+
+/*解答に対するコメント系*/
+.comment_for_answer {
+   
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 5px;
+    padding:5px;
+    margin:auto;
+}
+
+.comment_for_answer_detail {
+    color:#808080;
+    padding-bottom:3px;
+}
+
+
+
+/*
+.add {
+    display:block;
+    margin: 0 0 0 auto;
+}
+*/
+
+.tabs-menu {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+/* タブの基本スタイル */
+.tabs-menu li {
+  float: left;
+  margin-right: 8px;
+  margin-bottom: -1px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: transparent;
+  border-radius: 4px 4px 0 0;
+
+  /* 各プロパティをふわっと変える演出 */
+  transition: all .15s;
+}
+.tabs-menu a {
+  display: block;
+  padding: 10px 20px;
+  color: #557F95;
+  text-decoration: none;
+}
+
+/* 非選択のタブにマウスカーソルを乗せたら色を変える */
+.tabs-menu li:not(.active):hover {
+  border-color: #f0f0f0 #f0f0f0 #999;
+  background-color: #f0f0f0;
+}
+
+/* 選択中のタブの色を設定 */
+.tabs-menu .active {
+  border-color: #999 #999 transparent #999;
+  background-color: #fff;
+}
+.tabs-menu .active a {
+  color: #3F4548;
+}
+
+/* タブコンテンツ表示エリア */
+.tabs-content {
+  clear: both;
+  border-top: 1px solid #999;
+  border-radius: 0 4px 4px 4px;
+  padding: 10px;
+}
+
+/* 各タブのコンテンツはデフォルトで非表示 */
+.tabs-content section {
+  display: none;
+}

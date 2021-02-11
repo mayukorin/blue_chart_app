@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>章一覧</h2>
+    <table class="table table-striped">
+        <tbody>
+            {% for chapter in chapters %}
+                <tr>
+                    <td>{{chapter.subject.name}} 第{{chapter.number}}章 {{ chapter.name }}</td>
+                    <td><a href = "{% url 'blue_chart_app:section_list' chapter.id %}">詳細を見る</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table><br>
+{% endblock %}  
+    

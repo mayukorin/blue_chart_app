@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>検索結果</h2><br>
+    <p><span class="index">教科</span>：{% if subject %}{{subject.name}}{% else %}指定なし{% endif %}</p>
+    <p><span class="index">ページ</span>：{% if from_page %}{{from_page}}{% else %}指定なし{% endif %} ～ {% if to_page %}{{to_page}}{% else %}指定なし{% endif %}</p>
+    {% if not exercise_flag %}
+        <p><span class="index">問題番号</span>：{% if from_problem_number %}{{from_problem_number}}{% else %}指定なし{% endif %} ～ {% if to_problem_number %}{{to_problem_number}}{% else %}指定なし{% endif %}</p>
+    {% else %}
+        <p><span class="index">EXERCISE</span></p>
+    {% endif %}
+    <p><span class="index">難易度</span>：{% if difficulty != '0' %}{{difficulty}}{% else %}指定なし{% endif %}</p>
+    <p></p>
+    {% if problems|length == 0 %}
+        <p>該当データは存在しません</p> 
+    {% else %}
+        <table class="table table-striped">
+            <tbody>
+                {% for problem in problems %}
+                    <tr>
+                        <td>{{problem.problem_group.section.chapter.subject.name}}
+                        <td>§{{problem.problem_group.section.number}}</td>
+                        <td>{{ problem.name }}</td>
+                        <td><a href="{% url 'blue_chart_app:problem_show' problem.id %}">詳細を見る</a></td>
+                    </tr> 
+                    
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
+
+

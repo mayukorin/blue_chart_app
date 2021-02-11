@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+    <form method="post" action="{% url 'blue_chart_app:problem_search' %}">
+        <div class="row">
+            <div class="form-group col-sm-9">
+               <label>{{form.subject.field.label}}</label>
+               {{form.subject}}
+            </div>
+        </div>
+        <label>ページ範囲</label>
+        <div class="row">
+            <div class="form-group col-sm-4">
+                {{form.from_page}}
+            </div>
+            から
+            <div class="form-group col-sm-4">
+                {{form.to_page}}
+            </div>
+        </div>
+        <label>問題番号範囲</label>
+        <div class="row">
+      
+            <div class="form-group col-sm-4">
+                {{form.from_problem_number}}
+            </div>
+            から
+            <div class="form-group col-sm-4">
+                {{form.to_problem_number}}
+            </div>
+        </div>
+        <div class="form-group form-check">
+            {{form.exercise_flag}}
+            <label class="form-check-label">{{form.exercise_flag.field.label}}</label>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-9">
+                <label>{{form.difficulty.field.label}}</label>
+                {{form.difficulty}}
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-primary" type="submit">検索</button>
+        {% csrf_token %}        
+    </form>
+{% endblock %}
+

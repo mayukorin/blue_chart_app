@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load answer_is_overcome_with_cause_tag %}
+{% block content %}
+    <p><a href="{% url 'blue_chart_app:cause_tag_list' answer_list.0.problem.problem_group.section.id %}">
+            「§{{answer_list.0.problem.problem_group.section.number}}{{answer_list.0.problem.problem_group.section.name}}」の未克服原因タグ一覧
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_list_with_cause_tag' cause_tag.id answer_list.0.problem.problem_group.section.id %}">
+            原因タグ「{{cause_tag.content}}」と問題一覧
+        </a> > 
+        {{answer_list.0.problem.name}}
+    </p>
+    <table class="table table-hover">
+        <tbody>
+            <tr>
+                <th>解答日</th>
+                <th>解答状況</th>
+                <th>克服</th>
+            </tr>
+            {% for answer in answer_list %}
+            <tr data-href="{% url 'blue_chart_app:answer_show' answer.id %}">
+                <td>{{answer.solve_date|date:"Y/m/d H:i"}}</td>
+                <td>
+                    {% if answer.correct_situation.id == 2 %}
+                    <i class="far fa-circle maru"></i>
+                    {% elif answer.correct_situation.id == 3 %}
+                    <i class="batu fas fa-times"></i>
+                    {% else %}
+                    ー
+                    {% endif %}
+                </td>
+                <td>
+                    {% answer_is_overcome_with_cause_tag answer.id cause_tag.id %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        $('tr[data-href]').addClass('clickable')
+            .click(function (e) {
+                if (!$(e.target).is('a')) {
+                    window.location = $(e.target).closest('tr').data('href');
+                };
+            });
+    </script>
+{% endblock %}
