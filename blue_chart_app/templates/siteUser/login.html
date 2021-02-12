@@ -15,7 +15,8 @@
     <div class="form-group">
         <label>{{item.label}}</label>
         <input type="{{item.field.widget.input_type}}" class="form-control {% if item.errors %} is-invalid {% endif %}"
-            name="{{item.name}}" value="{% if item.value != None %}{{item.value}} {% endif %}">
+            name="{{item.name}}" value="{% if item.value != None %}{{item.value}}{% endif %}">
+        {{item.value}}
         {% if item.errors %}
         <div class="invalid-feedback">
             {{ item.errors.0 }}
