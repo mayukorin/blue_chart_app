@@ -156,7 +156,7 @@ class AnswerRegisterView(LoginRequiredMixin, View):
                 connect.save()
 
                 latest_connect = new_connect_form.get_latest_connect_cache()
-                if latest_connect.connect_model.solve_date < form.cleaned_data.get(
+                if latest_connect.connect_model.answer.solve_date < form.cleaned_data.get(
                     "solve_date"
                 ):
                     latest_connect.connect_model = connect
