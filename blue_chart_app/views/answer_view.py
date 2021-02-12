@@ -15,7 +15,7 @@ from blue_chart_app.models.answer_photo import AnswerPhoto
 from blue_chart_app.models.comment_for_answer_photo import CommentForAnswerPhoto
 from blue_chart_app.models.answer import Answer
 from blue_chart_app.models.cause_tag import CauseTag
-from blue_chart_app.models.seciton import Section
+from blue_chart_app.models.section import Section
 from blue_chart_app.models.comment_for_connect import CommentForConnect
 from blue_chart_app.models.latest_connect import LatestConnect
 from django.utils import timezone
