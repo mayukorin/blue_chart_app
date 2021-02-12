@@ -73,7 +73,7 @@ class ConnectRegisterView(LoginRequiredMixin, View):
 
             return render(request, "connect/register.html", context)
 
-        if form.cleaned_data["content"] != "":
+        if form.cleaned_data["content"] != "" and form.clenaed_data["content"] is not None:
 
             cause_tag = form.get_cause_tag_cache()
 
