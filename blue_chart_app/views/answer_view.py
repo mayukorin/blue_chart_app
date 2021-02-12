@@ -321,7 +321,7 @@ class AnswerListWithCauseTagView(LoginRequiredMixin, View):
         )
         cause_tag = CauseTag.objects.get(pk=cause_tag_id)
         section = None
-        if section_id == 0:
+        if section_id != 0:
             section = Section.objects.get(pk=section_id)
         return render(
             request,

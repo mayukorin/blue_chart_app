@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
     <p>
-        {% if section != None %}
+        {% if section is not None %}
             <a href="{% url 'blue_chart_app:cause_tag_list' section.id %}">
-                原因タグ一覧
+                「{{section.name}}」の原因タグ一覧
             </a> > 
         {% else %}
             <a href="{% url 'blue_chart_app:cause_tag_list' 0 %}">
-                「{{section.name}}」の原因タグ一覧
+                原因タグ一覧
             </a> > 
         {% endif %}
         原因タグ「{{latest_connects_with_cause_tag.0.cause_tag.content}}」
     </p>
-    {{section}}
     <h2>原因タグ「{{latest_connects_with_cause_tag.0.cause_tag.content}}」がついている問題一覧</h2>
     <table class="table table-striped">
         <tbody>
