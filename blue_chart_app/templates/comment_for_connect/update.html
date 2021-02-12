@@ -76,7 +76,7 @@
         </tbody>
     </table>
     <h3>原因タグ</h3>
-    <div class="tag tag_type{{comment_for_connect.connect.cause_tag.cause_type.id}} {% if comment_for_connect.connect.overcome_flag == 1 %} overcome{{comment_for_connect.connect.cause_tag.cause_type.id}} {% endif %}">
+    <div class="tag tag_type{{comment_for_connect.connect.cause_tag.cause_type.id}} {% if comment_for_connect.connect.is_overcome == 1 %} overcome{{comment_for_connect.connect.cause_tag.cause_type.id}} {% endif %}">
         <a class="cause_tag_link" href="{% url 'blue_chart_app:answer_list_with_cause_tag' comment_for_connect.connect.answer.problem.id comment_for_connect.connect.cause_tag.id %}">{{comment_for_connect.connect.cause_tag.content}}</a>
     </div><br><br>
     <form method="post" action="{% url 'blue_chart_app:comment_for_connect_update' comment_for_connect.id %}">
