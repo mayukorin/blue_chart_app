@@ -4,9 +4,11 @@ from blue_chart_app.models.problem import Problem
 from blue_chart_app.models.subject import Subject
 from blue_chart_app.models.latest_connect import LatestConnect
 from blue_chart_app.models.evaluate import Evaluate
+from blue_chart_app.models.section import Section
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from blue_chart_app.forms.problemForm import SearchForm
+
 
 
 class ProblemListView(LoginRequiredMixin, View):
@@ -144,17 +146,26 @@ problem_show_view = ProblemShowView.as_view()
 
 class ProblemListWithCauseTag(LoginRequiredMixin, View):
     def get(self, request, cause_tag_id, section_id, *args, **kwargs):
+        
+        section = None
 
-        latest_connects_with_cause_tag = (
+        query_set = (
             LatestConnect.objects.select_related("problem", "solve_user", "cause_tag")
             .filter(solve_user__id=request.user.reference_user.id)
             .filter(cause_tag__id=cause_tag_id)
         )
 
+        if section_id == 0:
+            latest_connects_with_cause_tag = query_set
+        else:
+            latest_connects_with_cause_tag = query_set.filter(problem__problem_group__section__id=section_id)
+            section = Section.objects.get(pk=section_id)
+
         return render(
             request,
             "problem/list_with_cause_tag.html",
-            {"latest_connects_with_cause_tag": latest_connects_with_cause_tag},
+            {"latest_connects_with_cause_tag": latest_connects_with_cause_tag,
+            "section": section},
         )
 
 

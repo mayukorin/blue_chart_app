@@ -11,50 +11,36 @@ from django.http import JsonResponse
 
 class CauseTagListView(LoginRequiredMixin, View):
     def get(self, request, section_id, *args, **kwargs):
-
+        
         queryset = (
             LatestConnect.objects.select_related()
             .filter(solve_user__id=request.user.reference_user.id)
-            .filter(connect_model__is_overcome=False)
+            
         )
-        overcome_queryset = (
-            LatestConnect.objects.select_related()
-            .filter(solve_user__id=request.user.reference_user.id)
-            .filter(connect_model__is_overcome=True)
-        )
+       
         section = None
 
         if section_id == 0:
-            not_overcome_cause_tags = queryset.values(
+            cause_tags = queryset.values(
                 "cause_tag__id", "cause_tag__cause_type__id", "cause_tag__content"
             ).annotate(total=Count("cause_tag"))
-            overcome_cause_tags = overcome_queryset.values(
-                "cause_tag__id", "cause_tag__cause_type__id", "cause_tag__content"
-            ).annotate(total=Count("cause_tag"))
-
+            
         else:
-            not_overcome_cause_tags = (
+            cause_tags = (
                 queryset.filter(problem__problem_group__section__id=section_id)
                 .values(
                     "cause_tag__id", "cause_tag__cause_type__id", "cause_tag__content"
                 )
                 .annotate(total=Count("cause_tag"))
             )
-            overcome_cause_tags = (
-                overcome_queryset.filter(problem__problem_group__section__id=section_id)
-                .values(
-                    "cause_tag__id", "cause_tag__cause_type__id", "cause_tag__content"
-                )
-                .annotate(total=Count("cause_tag"))
-            )
+            
             section = Section.objects.get(pk=section_id)
-
+        
         return render(
             request,
             "cause_tag/list.html",
             {
-                "not_overcome_cause_tags": not_overcome_cause_tags,
-                "overcome_cause_tags": overcome_cause_tags,
+                "cause_tags": cause_tags,
                 "section": section,
             },
         )

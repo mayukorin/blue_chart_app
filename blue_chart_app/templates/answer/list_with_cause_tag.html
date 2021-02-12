@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 {% load answer_is_overcome_with_cause_tag %}
 {% block content %}
-    <p><a href="{% url 'blue_chart_app:cause_tag_list' answer_list.0.problem.problem_group.section.id %}">
-            「§{{answer_list.0.problem.problem_group.section.number}}{{answer_list.0.problem.problem_group.section.name}}」の未克服原因タグ一覧
-        </a> > 
-        <a href="{% url 'blue_chart_app:problem_list_with_cause_tag' cause_tag.id answer_list.0.problem.problem_group.section.id %}">
-            原因タグ「{{cause_tag.content}}」と問題一覧
-        </a> > 
+    <p>
+        {% if section %}
+            <a href="{% url 'blue_chart_app:cause_tag_list' section.id %}">
+                「{{section.name}}」の原因タグ一覧
+            </a> > 
+            <a href="{% url 'blue_chart_app:problem_list_with_cause_tag' cause_tag.id section.id %}">
+                原因タグ「{{cause_tag.content}}」と問題一覧
+            </a> > 
+        {% else %}
+            <a href="{% url 'blue_chart_app:cause_tag_list' 0 %}">
+                原因タグ一覧
+            </a> > 
+            <a href="{% url 'blue_chart_app:problem_list_with_cause_tag' cause_tag.id  0 %}">
+                原因タグ「{{cause_tag.content}}」と問題一覧
+            </a> > 
+        {% endif %}
         {{answer_list.0.problem.name}}
     </p>
     <table class="table table-hover">

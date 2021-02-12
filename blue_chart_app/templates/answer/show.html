@@ -95,7 +95,7 @@
                     <div>
                         <div>
                             <span class="tag tag_type{{connect.cause_tag.cause_type.id}} {% if connect.is_overcome == 1 %} overcome{{connect.cause_tag.cause_type.id}} {% endif %}">
-                                <a class="cause_tag_link" href="{% url 'blue_chart_app:answer_list_with_cause_tag' connect.answer.problem.id connect.cause_tag.id %}">
+                                <a class="cause_tag_link" href="{% url 'blue_chart_app:answer_list_with_cause_tag' connect.answer.problem.id connect.cause_tag.id connect.answer.problem.problem_group.section.id %}">
                                     {{connect.cause_tag.content}}
                                 </a>
                             </span>

@@ -310,7 +310,7 @@ answer_show_view = AnswerShowView.as_view()
 
 
 class AnswerListWithCauseTagView(LoginRequiredMixin, View):
-    def get(self, request, problem_id, cause_tag_id, *args, **kwargs):
+    def get(self, request, problem_id, cause_tag_id, section_id, *args, **kwargs):
 
         answer_list = (
             Answer.objects.select_related("problem")
@@ -319,10 +319,13 @@ class AnswerListWithCauseTagView(LoginRequiredMixin, View):
             .order_by("-solve_date")
         )
         cause_tag = CauseTag.objects.get(pk=cause_tag_id)
+        section = None
+        if section_id == 0:
+            section = Section.objects.get(pk=section_id)
         return render(
             request,
             "answer/list_with_cause_tag.html",
-            {"answer_list": answer_list, "cause_tag": cause_tag},
+            {"answer_list": answer_list, "cause_tag": cause_tag, "section": section},
         )
 
 
