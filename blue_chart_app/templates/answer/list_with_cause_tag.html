@@ -2,7 +2,7 @@
 {% load answer_is_overcome_with_cause_tag %}
 {% block content %}
     <p>
-        {% if section %}
+        {% if section != None %}
             <a href="{% url 'blue_chart_app:cause_tag_list' section.id %}">
                 「{{section.name}}」の原因タグ一覧
             </a> > 
