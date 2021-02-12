@@ -122,7 +122,7 @@ class ConnectRegisterView(LoginRequiredMixin, View):
                 comment_for_connect.connect = connect
                 comment_for_connect.save()
 
-        messages.success(request, "新しい原因タグを登録しました")
+            messages.success(request, "新しい原因タグを登録しました")
         return redirect("blue_chart_app:answer_show", answer_id=answer_id)
 
 
