@@ -27,7 +27,7 @@
         <button class="btn btn-primary" type="submit">ログイン</button><br>
         {% if user.reference_user.id != user.id %}
        　    <p><a href="{% url 'blue_chart_app:reference_user_logout' %}">{{user.reference_user.username}}のページからログアウトする</a></p>
-   　    {% endif %}
+        {% endif %}
     </form>
 
 {% endblock %}

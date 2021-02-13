@@ -4,3 +4,4 @@ myvenv
 __pycache__/
 db/
 config/settings/local.py
+config/settings/product.py

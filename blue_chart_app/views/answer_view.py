@@ -347,8 +347,8 @@ class AnswerDeleteView(LoginRequiredMixin, View):
                 answer_photo__id=answer_photo.id
             ).delete()
             if str(answer_photo.image) != "":
-                # ret = cloudinary.uploader.destroy(public_id = str(answer_photo.image))
-                os.remove(str(answer_photo.image))
+                # ret = cloudinary.uploader.destroy(public_id = str(answer_photo.image)) 本番環境ではこっち
+                os.remove(str(answer_photo.image)) # ローカル環境ではこっち
 
         connects = Connect.objects.select_related("answer").filter(answer__id=answer_id)
         for connect in connects:

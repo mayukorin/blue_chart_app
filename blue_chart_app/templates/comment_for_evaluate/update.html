@@ -26,7 +26,10 @@
         <tbody>
             <tr>
                 <td>範囲</td>
-                <td>{{comment_for_evaluate.evaluate.problem.problem_group.section.chapter.subject.name}} §{{comment_for_evaluate.evaluate.problem.problem_group.section.number}} {{comment_for_evaluate.evaluate.problem.problem_group.section.name}}</td>
+                <td>{{comment_for_evaluate.evaluate.problem.problem_group.section.chapter.subject.name}} 
+                    §{{comment_for_evaluate.evaluate.problem.problem_group.section.number}} 
+                    {{comment_for_evaluate.evaluate.problem.problem_group.section.name}}
+                </td>
             </tr>
             <tr>
                 <td>問題名</td>
@@ -57,10 +60,8 @@
                     <div class="invalid-feedback">{{form.content.errors.0}}</div>
                 {% endif %}
             </div>
-        
         <button class="btn btn-primary" type="submit">登録</button>
-   　
-       　{% csrf_token %}
+        {% csrf_token %}
     </form>
     
 {% endblock %}

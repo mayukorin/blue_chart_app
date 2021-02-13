@@ -11,20 +11,18 @@ from django.http import JsonResponse
 
 class CauseTagListView(LoginRequiredMixin, View):
     def get(self, request, section_id, *args, **kwargs):
-        
-        queryset = (
-            LatestConnect.objects.select_related()
-            .filter(solve_user__id=request.user.reference_user.id)
-            
+
+        queryset = LatestConnect.objects.select_related().filter(
+            solve_user__id=request.user.reference_user.id
         )
-       
+
         section = None
 
         if section_id == 0:
             cause_tags = queryset.values(
                 "cause_tag__id", "cause_tag__cause_type__id", "cause_tag__content"
             ).annotate(total=Count("cause_tag"))
-            
+
         else:
             cause_tags = (
                 queryset.filter(problem__problem_group__section__id=section_id)
@@ -33,16 +31,13 @@ class CauseTagListView(LoginRequiredMixin, View):
                 )
                 .annotate(total=Count("cause_tag"))
             )
-            
+
             section = Section.objects.get(pk=section_id)
-        
+
         return render(
             request,
             "cause_tag/list.html",
-            {
-                "cause_tags": cause_tags,
-                "section": section,
-            },
+            {"cause_tags": cause_tags, "section": section, },
         )
 
 
@@ -53,11 +48,7 @@ class CauseTagGraph(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         chapters = Chapter.objects.all()
 
-        return render(
-            request,
-            "cause_tag/graph.html",
-            {"chapters": chapters},
-        )
+        return render(request, "cause_tag/graph.html", {"chapters": chapters},)
 
 
 cause_tag_graph = CauseTagGraph.as_view()
@@ -70,7 +61,7 @@ class ConnectsCountBySectionAndCauseTagType(LoginRequiredMixin, View):
         sections = Section.objects.filter(chapter__id=chapter_id).values()
         connects_count = {}
         for cause_tag_type_id in range(1, 4):
-            
+
             connects_by_section_and_cause_tag_type = (
                 Connect.objects.select_related()
                 .filter(answer__student__id=request.user.reference_user.id)

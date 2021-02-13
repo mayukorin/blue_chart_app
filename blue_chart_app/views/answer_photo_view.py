@@ -68,8 +68,8 @@ class AnswerPhotoDeleteView(LoginRequiredMixin, View):
     def post(self, request, answer_photo_id, *args, **kwargs):
 
         answer_photo = AnswerPhoto.objects.get(pk=answer_photo_id)
-        ret = cloudinary.uploader.destroy(public_id = str(answer_photo.image))
-        #os.remove(str(answer_photo.image))
+        #ret = cloudinary.uploader.destroy(public_id = str(answer_photo.image))
+        os.remove(str(answer_photo.image))
 
         answer_photo.image = ""
         answer_photo.save()

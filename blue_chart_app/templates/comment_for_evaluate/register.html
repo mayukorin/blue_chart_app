@@ -25,7 +25,10 @@
             <tbody>
                 <tr>
                     <td>範囲</td>
-                    <td>{{evaluate.problem.problem_group.section.chapter.subject.name}} §{{evaluate.problem.problem_group.section.number}} {{evaluate.problem.problem_group.section.name}}</td>
+                    <td>{{evaluate.problem.problem_group.section.chapter.subject.name}} 
+                        §{{evaluate.problem.problem_group.section.number}} 
+                        {{evaluate.problem.problem_group.section.name}}
+                    </td>
                 </tr>
                 <tr>
                     <td>問題名</td>
@@ -51,15 +54,13 @@
     <form method="post" action="{% url 'blue_chart_app:comment_for_evaluate_register' evaluate.id %}">
             <div class="form-group">
                 <label>{{form.content.label}}</label>
-                <textarea name="content" class="form-control {% if form.content.errors %}is-invalid{% endif %}">{% if form.content.value != None %}{{form.content.value}}{% endif %}</textarea>
+                <textarea name="content" class="form-control {% if form.content.errors %}is-invalid{% endif %}">% if form.content.value != None %}{{form.content.value}}{% endif %}</textarea>
                 {% if form.content.errors %}
                     <div class="invalid-feedback">{{form.content.errors.0}}</div>
                 {% endif %}
             </div>
-        
         <button class="btn btn-primary" type="submit">登録</button>
-   　
-       　{% csrf_token %}
+        {% csrf_token %}
     </form>
     
 {% endblock %}

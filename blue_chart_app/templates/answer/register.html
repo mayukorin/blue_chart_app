@@ -29,62 +29,56 @@
         <div class="form-group">
             <label>{{item.field.label}}</label>
             {% if forloop.counter0 != 3 and forloop.counter0 != 4 and forloop.counter0 != 5%}
-            <input name="{{item.name}}" type="{{item.field.widget.input_type}}"
-                class="form-control {% if item.errors %} is-invalid {% endif %}"
-                value="{% if item.value != None %}{{item.value}}{% endif %}">
-            {% if item.errors %}
-            <div class="invalid-feedback">
-                {{item.errors.0}}
-            </div>
-            {% endif %}
+                <input name="{{item.name}}" type="{{item.field.widget.input_type}}"
+                    class="form-control {% if item.errors %} is-invalid {% endif %}"
+                    value="{% if item.value != None %}{{item.value}}{% endif %}">
+                {% if item.errors %}
+                    <div class="invalid-feedback">
+                        {{item.errors.0}}
+                    </div>
+                {% endif %}
             {% elif forloop.counter0 == 3 %}
-            {{form.correct_situation}}
+                {{form.correct_situation}}
             {% elif forloop.counter0 == 5 %}
-            <textarea name="{{item.name}}"
-                class="form-control {% if item.errors %} is-invalid {% endif %}">{% if item.value != None %}{{item.value}}{% endif %}</textarea>
-            {% if item.errors %}
-            <div class="invalid-feedback">
-                {{item.errors.0}}
-            </div>
-            {% endif %}
+                <textarea name="{{item.name}}"
+                    class="form-control {% if item.errors %} is-invalid {% endif %}">{% if item.value != None %}{{item.value}}{% endif %}</textarea>
+                {% if item.errors %}
+                    <div class="invalid-feedback">
+                        {{item.errors.0}}
+                    </div>
+                {% endif %}
             {% else %}
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="custom-file-1" name="{{item.name}}"
-                    accept="image/jpeg, image/png" value="{% if item.value != None %}{{item.value}}{% endif %}">
-                <label class="custom-file-label" for="custom-file-1" id="filename">ここに写真を登録してください</label>
-            </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="custom-file-1" name="{{item.name}}"
+                        accept="image/jpeg, image/png" value="{% if item.value != None %}{{item.value}}{% endif %}">
+                    <label class="custom-file-label" for="custom-file-1" id="filename">ここに写真を登録してください</label>
+                </div>
             {% endif %}
         </div>
         {% endfor %}
 
-
         <p>未克服原因タグ</p>
         {{connects_for_not_overcome_latest_connects_formset.management_form}}
         <div>
-
             {% if new_connects_forms|length == 0 %}
-            未克服原因タグはまだありません　
+                未克服原因タグはまだありません　
             {% else %}
-
-            {% for new_connects_form in new_connects_forms %}
-            <div class="form-group">
-                <input type="text" value="{{new_connects_form.cause_tag_cache.content}}" class="form-control" readonly>
-            </div>
-            <div class="form-group">
-                <input type="text" value="{{new_connects_form.cause_tag_cache.cause_type.name}}" class="form-control"
-                    readonly>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox"
-                    id="id_{{new_connects_form.latest_connect_cache.id}}-is_overcome"
-                    name="{{new_connects_form.latest_connect_cache.id}}-is_overcome">
-                <label class="form-check-label" for="check1a">克服したか</label>
-            </div>
-
-            {% endfor %}
-
+                {% for new_connects_form in new_connects_forms %}
+                    <div class="form-group">
+                        <input type="text" value="{{new_connects_form.cause_tag_cache.content}}" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="{{new_connects_form.cause_tag_cache.cause_type.name}}" class="form-control"
+                            readonly>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                            id="id_{{new_connects_form.latest_connect_cache.id}}-is_overcome"
+                            name="{{new_connects_form.latest_connect_cache.id}}-is_overcome">
+                        <label class="form-check-label" for="check1a">克服したか</label>
+                    </div>
+                {% endfor %}
             {% endif %}
-
         </div>
 
         <hr>
@@ -95,10 +89,10 @@
         </div>
         <div id="cause_tag_area">
             {% for cause_tag in formset %}
-            <div id="cause_tag_form-{{forloop.counter0}}">
-                {{cause_tag.as_p}}
-            </div>
-            <hr>
+                <div id="cause_tag_form-{{forloop.counter0}}">
+                    {{cause_tag.as_p}}
+                </div>
+                <hr>
             {% endfor %}
         </div>
 
@@ -107,9 +101,8 @@
             <button class="btn btn-primary add" id="del" type="button">削除</button>
         </div>
 
-        <button class="btn btn-primary" type="submit">登録</button>
-        　
-        　{% csrf_token %}
+        <button class="btn btn-primary" type="submit">登録</button>　
+        {% csrf_token %}
     </form>
     <script>
         $(document).on('change', ':file', function () {

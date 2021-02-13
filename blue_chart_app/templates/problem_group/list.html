@@ -5,7 +5,8 @@
               章一覧
         </a> > 
         <a href="{% url 'blue_chart_app:section_list' section.chapter.id %}">
-            {{section.chapter.subject.name}} 第{{section.chapter.number}}章 
+            {{section.chapter.subject.name}} 
+            第{{section.chapter.number}}章 
             {{ section.chapter.name }}
         </a> > 
         §{{section.number}} 
@@ -20,7 +21,6 @@
                     <td><a href="{% url 'blue_chart_app:problem_list' problem_group.id %}">問題一覧</a></td>
                 </tr>
             {% endfor %}
-    
         </tbody>
     </table>
 {% endblock %}

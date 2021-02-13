@@ -35,7 +35,10 @@
         <tbody>
             <tr>
                 <td>範囲</td>
-                <td>{{comment_for_answer.answer.problem.problem_group.section.chapter.subject.name}} §{{comment_for_answer.answer_photo.answer.problem.problem_group.section.number}} {{comment_for_answer.answer_photo.answer.problem.problem_group.section.name}}</td>
+                <td>{{comment_for_answer.answer.problem.problem_group.section.chapter.subject.name}} 
+                    §{{comment_for_answer.answer_photo.answer.problem.problem_group.section.number}} 
+                    {{comment_for_answer.answer_photo.answer.problem.problem_group.section.name}}
+                </td>
             </tr>
             <tr>
                 <td>問題名</td>
@@ -78,16 +81,15 @@
     </table>
     <br>
     <form method="post" action="{% url 'blue_chart_app:comment_for_answer_update' comment_for_answer.id %}">
-         <div class="form-group">
+        <div class="form-group">
             <label>{{form.content.label}}</label>
             <textarea name="{{form.content.name}}" class="form-control {% if form.content.errors %} is-invalid {% endif %}">{% if form.content.value != None %}{{form.content.value}}{% endif %}</textarea>
             {% if form.content.errors %}
-              <div class="invalid-feedback">{{form.content.errors.0}}</div>
-          {% endif %}
+                <div class="invalid-feedback">{{form.content.errors.0}}</div>
+            {% endif %}
         </div>
         <br><button class="btn btn-primary" type="submit">登録</button>
-       　
-   　    {% csrf_token %}  
+        {% csrf_token %}  
     </form>
     
 {% endblock %}

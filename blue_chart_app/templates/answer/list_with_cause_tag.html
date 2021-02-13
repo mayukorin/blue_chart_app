@@ -27,21 +27,21 @@
                 <th>克服</th>
             </tr>
             {% for answer in answer_list %}
-            <tr data-href="{% url 'blue_chart_app:answer_show' answer.id %}">
-                <td>{{answer.solve_date|date:"Y/m/d H:i"}}</td>
-                <td>
-                    {% if answer.correct_situation.id == 2 %}
-                        <i class="far fa-circle maru"></i>
-                    {% elif answer.correct_situation.id == 3 %}
-                        <i class="batu fas fa-times"></i>
-                    {% else %}
-                        {{answer.correct_situation.situation}}
-                    {% endif %}
-                </td>
-                <td>
-                    {% answer_is_overcome_with_cause_tag answer.id cause_tag.id %}
-                </td>
-            </tr>
+                <tr data-href="{% url 'blue_chart_app:answer_show' answer.id %}">
+                    <td>{{answer.solve_date|date:"Y/m/d H:i"}}</td>
+                    <td>
+                        {% if answer.correct_situation.id == 2 %}
+                            <i class="far fa-circle maru"></i>
+                        {% elif answer.correct_situation.id == 3 %}
+                            <i class="batu fas fa-times"></i>
+                        {% else %}
+                            {{answer.correct_situation.situation}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% answer_is_overcome_with_cause_tag answer.id cause_tag.id %}
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>

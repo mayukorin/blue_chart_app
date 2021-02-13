@@ -31,7 +31,10 @@
         <tbody>
             <tr>
                 <td>範囲</td>
-                <td>{{connect.answer.problem.problem_group.section.chapter.subject.name}} §{{connect.answer.problem.problem_group.section.number}} {{connect.answer.problem.problem_group.section.name}}</td>
+                <td>{{connect.answer.problem.problem_group.section.chapter.subject.name}} 
+                    §{{connect.answer.problem.problem_group.section.number}} 
+                    {{connect.answer.problem.problem_group.section.name}}
+                </td>
             </tr>
             <tr>
                 <td>問題名</td>
@@ -75,7 +78,7 @@
     </table>
     <h3>原因タグ</h3>
     <div class="tag tag_type{{connect.cause_tag.cause_type.id}} {% if connect.is_overcome == 1 %} overcome{{connect.cause_tag.cause_type.id}} {% endif %}">
-        <a class="cause_tag_link" href="{% url 'blue_chart_app:answer_list_with_cause_tag' connect.answer.problem.id connect.cause_tag.id connect.cause_tag.id connect.answer.problem.problem_group.section.id %}">
+        <a class="cause_tag_link" href="{% url 'blue_chart_app:answer_list_with_cause_tag' connect.answer.problem.id connect.cause_tag.id  connect.answer.problem.problem_group.section.id %}">
             {{connect.cause_tag.content}}
         </a>
     </div><br><br>
@@ -84,11 +87,10 @@
             <label>{{form.content.label}}</label>
             <textarea name="{{form.content.name}}" class="form-control {% if form.content.errors %}is-invalid{% endif %}">{% if form.content.value != None %}{{form.content.value}}{% endif %}</textarea>
             {% if form.content.errors %}
-                    <div class="invalid-feedback">{{form.content.errors.0}}</div>
+                <div class="invalid-feedback">{{form.content.errors.0}}</div>
             {% endif %}
         </div>
         <button class="btn btn-primary" type="submit">投稿</button>
-       　
-       　{% csrf_token %}
+        {% csrf_token %}
     </form>
 {% endblock %}

@@ -74,22 +74,23 @@
         </tbody>
     </table>
     <form enctype="multipart/form-data" method="post" action="{% url 'blue_chart_app:answer_photo_register' answer.id %}"　>
-    <div>
         <div>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input {% if form.image.errors %}is-invalid{% endif %}" id="custom-file-1" name="{{form.image.name}}" accept="image/jpeg, image/png" value="{% if form.image.value != None %}{{form.image.value}}{% endif %}">
-          <label class="custom-file-label" for="custom-file-1" id="filename">ここに解答写真を登録してください</label>
-          {% if form.image.errors %}
-              <div class="invalid-feedback">{{form.image.errors.0}}</div>
-          {% endif %}
-        </div></div><br>
-        <div class="form-group">
-            <label>{{form.comment.label}}</label>
-            <textarea name="{{form.comment.name}}" class="form-control {% if form.comment.errors %} is-invalid {% endif %}">{% if form.comment.value != None %}{{form.comment.value}}{% endif %}</textarea>
+            <div>
+                <div class="custom-file">
+                <input type="file" class="custom-file-input {% if form.image.errors %}is-invalid{% endif %}" id="custom-file-1" name="{{form.image.name}}" accept="image/jpeg, image/png" value="{% if form.image.value != None %}{{form.image.value}}{% endif %}">
+                <label class="custom-file-label" for="custom-file-1" id="filename">ここに解答写真を登録してください</label>
+                {% if form.image.errors %}
+                    <div class="invalid-feedback">{{form.image.errors.0}}</div>
+                {% endif %}
+                </div>
+            </div><br>
+            <div class="form-group">
+                <label>{{form.comment.label}}</label>
+                <textarea name="{{form.comment.name}}" class="form-control {% if form.comment.errors %} is-invalid {% endif %}">{% if form.comment.value != None %}{{form.comment.value}}{% endif %}</textarea>
+            </div>
         </div>
-    </div>
-    <br><button class="btn btn-primary" type="submit">登録</button>
-       　
+        <br>
+        <button class="btn btn-primary" type="submit">登録</button>
        　{% csrf_token %}  
     </form>
     <script>

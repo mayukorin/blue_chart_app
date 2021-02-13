@@ -125,7 +125,8 @@
                         {% else %}
                         <div class="explain">
                             <div>
-                                {{connect.comments_for_connect.all|length}}件のコメント&nbsp;<i id="comments_for_connect_bar{{connect.id}}" class="comments_for_connect_bar fas fa-chevron-down"></i>
+                                {{connect.comments_for_connect.all|length}}件のコメント&nbsp;
+                                <i id="comments_for_connect_bar{{connect.id}}" class="comments_for_connect_bar fas fa-chevron-down"></i>
                             </div> 
                         </div>
                         <div class="comments_for_connect" id="comments_for_connect{{connect.id}}">
@@ -134,11 +135,12 @@
                                 {% for cc in connect.comments_for_connect.all %}
                                     <tr>
                                         <td>
-                                        <span class="comment_username">{{cc.comment_user.username}}</span>
+                                            <span class="comment_username">{{cc.comment_user.username}}</span>
                                             &nbsp;&nbsp;{{cc.updated_at|date:"Y/m/d H:i"}}
                                             {% if cc.updated_at != cc.created_at %} (編集済み）{% endif %}
                                             {% if request.user.id == cc.comment_user.id %}
-                                                &nbsp;<a href="{% url 'blue_chart_app:comment_for_connect_update' cc.id %}">編集</a>&nbsp;&nbsp;<a  class="delete" href="#" onclick="confirmDestroy({{cc.id}},'comment_for_connect')">削除</a>
+                                                &nbsp;<a href="{% url 'blue_chart_app:comment_for_connect_update' cc.id %}">編集</a>&nbsp;&nbsp;
+                                                <a  class="delete" href="#" onclick="confirmDestroy({{cc.id}},'comment_for_connect')">削除</a>
                                                 <form id="form_comment_for_connect_{{cc.id}}" method="post" action="{% url 'blue_chart_app:comment_for_connect_delete' cc.id %}">
                                                     {% csrf_token %}
                                                 </form>
@@ -174,7 +176,7 @@
                     <span class="answer_photo_upload_user">
                         {{ap.upload_user.username}}
                     </span>
-                    {% if ap.comments_for_answer_photo.all|length == 0 and ap.omage.url != '' %}
+                    {% if ap.comments_for_answer_photo.all|length == 0 and ap.image.url != '' %}
                         <div class="explain">
                             <div><a href="{% url 'blue_chart_app:comment_for_answer_photo_register' ap.id %}">この写真へのコメントを追加する</a></div>
                             {% if ap.image.url != '' %}
@@ -191,7 +193,10 @@
                         </div>
                     {% else %}
                         <div class="explain">
-                            <div>{{ap.comments_for_answer_photo.all|length}}件のコメント&nbsp;<i id="comments_for_answer_photo_bar{{ap.id}}" class="comments_for_answer_photo_bar fas fa-chevron-down"></i></div>
+                            <div>
+                                {{ap.comments_for_answer_photo.all|length}}件のコメント&nbsp;
+                                <i id="comments_for_answer_photo_bar{{ap.id}}" class="comments_for_answer_photo_bar fas fa-chevron-down"></i>
+                            </div>
                             {% if ap.image.url != '' %}
                                 <div class="download">
                                     <a href="{{ap.image.url}}" download>ダウンロード</a>
@@ -251,7 +256,6 @@
                         <form id="form_comment_for_anwer_{{c.id}}" method="post" action="{% url 'blue_chart_app:comment_for_answer_delete' c.id %}">
                             {% csrf_token %}
                         </form>
-                        
                     {% endif %}
                 </div>
                 {{c.content|linebreaksbr}}

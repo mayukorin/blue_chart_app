@@ -12,23 +12,23 @@
     <br>
     <form method="post" action="{% url 'blue_chart_app:siteUser_register' %}">
         {% for item in form %}
-        {% if item.name == "is_teacher" %}
-        <div class="form-group form-check">
-            <input type="checkbox" name="{{item.name}}" class="form-check-input" id="id_{{item.name}}">
-            <label class="form-check-label">先生としてログインする</label>
-        </div>
-        {% else %}
-        <div class="form-group">
-            <label>{{item.field.label}}</label>
-            <input type="{{item.field.widget.input_type}}" class="form-control {% if item.errors %} is-invalid {% endif %}"
-                name="{{item.name}}" value="{% if item.value != Nonw%}{{item.value}}{% endif %}" id="id_{{item.name}}">
-            {% if item.errors %}
-            <div class="invalid-feedback">
-                {{item.errors.0}}
-            </div>
+            {% if item.name == "is_teacher" %}
+                <div class="form-group form-check">
+                    <input type="checkbox" name="{{item.name}}" class="form-check-input" id="id_{{item.name}}">
+                    <label class="form-check-label">先生としてログインする</label>
+                </div>
+            {% else %}
+                <div class="form-group">
+                    <label>{{item.field.label}}</label>
+                    <input type="{{item.field.widget.input_type}}" class="form-control {% if item.errors %} is-invalid {% endif %}"
+                        name="{{item.name}}" value="{% if item.value != Nonw%}{{item.value}}{% endif %}" id="id_{{item.name}}">
+                    {% if item.errors %}
+                        <div class="invalid-feedback">
+                            {{item.errors.0}}
+                        </div>
+                    {% endif %}
+                </div>
             {% endif %}
-        </div>
-        {% endif %}
         {% endfor %}
         <button class="btn btn-primary" type="submit">登録</button>
         {% csrf_token %}

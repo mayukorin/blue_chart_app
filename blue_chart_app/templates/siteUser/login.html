@@ -12,16 +12,16 @@
 {% endif %}
 <form method="post" action="{% url 'blue_chart_app:siteUser_login' %}">
     {% for item in form %}
-    <div class="form-group">
-        <label>{{item.label}}</label>
-        <input type="{{item.field.widget.input_type}}" class="form-control {% if item.errors %} is-invalid {% endif %}"
-            name="{{item.name}}" value="{% if item.value != None %}{{item.value}}{% endif %}">
-        {% if item.errors %}
-        <div class="invalid-feedback">
-            {{ item.errors.0 }}
+        <div class="form-group">
+            <label>{{item.label}}</label>
+            <input type="{{item.field.widget.input_type}}" class="form-control {% if item.errors %} is-invalid {% endif %}"
+                name="{{item.name}}" value="{% if item.value != None %}{{item.value}}{% endif %}">
+            {% if item.errors %}
+                <div class="invalid-feedback">
+                    {{ item.errors.0 }}
+                </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
     {% endfor %}
     {% csrf_token %}
     <br>
