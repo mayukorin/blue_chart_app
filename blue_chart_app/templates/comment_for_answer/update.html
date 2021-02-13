@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>
+        <a href = "{% url 'blue_chart_app:chapter_list' %}">
+            章一覧
+        </a> > 
+        <a href="{% url 'blue_chart_app:section_list' comment_for_answer.answer.problem.problem_group.section.chapter.id %}">
+            {{comment_for_answer.answer.problem.problem_group.section.chapter.subject.name}} 
+            第{{comment_for_answer.answer.problem.problem_group.section.chapter.number}}章 
+            {{ comment_for_answer.answer.problem.problem_group.section.chapter.name }}
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_group_list' comment_for_answer.answer.problem.problem_group.section.id %}"> 
+            §{{comment_for_answer.answer.problem.problem_group.section.number}} 
+            {{comment_for_answer.answer.problem.problem_group.section.name}}
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_list' comment_for_answer.answer.problem.problem_group.id %}">
+            {{comment_for_answer.answer.problem.problem_group.name}}
+            {{comment_for_answer.answer.problem_group.name}}
+            （{{comment_for_answer.answer.problem.problem_group.problems.all|length}}題）
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_show' comment_for_answer.answer.problem.id %}">
+            {{comment_for_answer.answer.problem.name}}
+        </a> > 
+        <a href="{% url 'blue_chart_app:answer_list_with_problem' comment_for_answer.answer.problem.id %}">
+            勉強記録一覧
+        </a> > 
+        <a href="{% url 'blue_chart_app:answer_show' comment_for_answer.answer.id %}">
+            {{comment_for_answer.answer.solve_plan_date|date:"Y年m月d日"}}
+        </a> > 
+        解答のコメント編集ページ
+        
+    </p>
+    <h2>解答のコメント編集ページ</h2>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>範囲</td>
+                <td>{{comment_for_answer.answer.problem.problem_group.section.chapter.subject.name}} 
+                    §{{comment_for_answer.answer_photo.answer.problem.problem_group.section.number}} 
+                    {{comment_for_answer.answer_photo.answer.problem.problem_group.section.name}}
+                </td>
+            </tr>
+            <tr>
+                <td>問題名</td>
+                <td>{{comment_for_answer.answer.problem.name}}</td>
+            </tr>
+            <tr>
+                <td>詳細</td>
+                <td>{{comment_for_answer.answer.problem.problem_group.title}}</td>
+            </tr>
+            <tr>
+                <td>解答予定日</td>
+                <td>{{comment_for_answer.answer.solve_plan_date|date:"Y/m/d H:i"}}</td>
+            </tr>
+            <tr>
+                <td>解答日</td>
+                <td>
+                    {% if comment_for_answer.answer.solve_date != None %}
+                       {{comment_for_answer.answer.solve_date|date:"Y/m/d H:i"}}
+                    {% else %}
+                        ー
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>解答状況</td>
+                <td>
+                    {{comment_for_answer.answer.correct_situation.situation}}
+                </td>
+            </tr>
+            <tr>
+                <td>解答時間</td>
+                <td>
+                     {% if comment_for_answer.answer.actual_time != 0 and comment_for_answer.answer.actual_time != None %}
+                        {{comment_for_answer.answer.actual_time}}分
+                    {% else %}
+                        ー
+                    {% endif %}
+                </td>
+            </tr>
+    </table>
+    <br>
+    <form method="post" action="{% url 'blue_chart_app:comment_for_answer_update' comment_for_answer.id %}">
+        <div class="form-group">
+            <label>{{form.content.label}}</label>
+            <textarea name="{{form.content.name}}" class="form-control {% if form.content.errors %} is-invalid {% endif %}">{% if form.content.value != None %}{{form.content.value}}{% endif %}</textarea>
+            {% if form.content.errors %}
+                <div class="invalid-feedback">{{form.content.errors.0}}</div>
+            {% endif %}
+        </div>
+        <br><button class="btn btn-primary" type="submit">登録</button>
+        {% csrf_token %}  
+    </form>
+    
+{% endblock %}

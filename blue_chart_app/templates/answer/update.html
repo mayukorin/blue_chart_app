@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>
+        <a href = "{% url 'blue_chart_app:chapter_list' %}">
+            章一覧
+        </a> > 
+        <a href="{% url 'blue_chart_app:section_list' answer.problem.problem_group.section.chapter.id %}">
+            {{answer.problem.problem_group.section.chapter.subject.name}} 
+            第{{answer.problem.problem_group.section.chapter.number}}章 
+            {{ answer.problem.problem_group.section.chapter.name }}
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_group_list' answer.problem.problem_group.section.id %}">
+             §{{answer.problem.problem_group.section.number}} {{answer.problem.problem_group.section.name}}
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_list' answer.problem.problem_group.id %}">
+            {{answer.problem.problem_group.name}}{{answer.problem_group.name}}（{{answer.problem.problem_group.problems.all|length}}題）
+        </a> > 
+        <a href="{% url 'blue_chart_app:problem_show' answer.problem.id %}">
+            {{answer.problem.name}}
+        </a> > 
+        <a href="{% url 'blue_chart_app:answer_list_with_problem' answer.problem.id %}">
+            勉強記録一覧
+        </a> > 
+        <a href="{% url 'blue_chart_app:answer_show' answer.id %}">
+            {{answer.solve_plan_date|date:"Y年m月d日"}}
+        </a> > 
+        勉強記録編集
+    </p>
+    <h2>勉強記録編集ページ</h2><br>
+    <form method="post" action="{% url 'blue_chart_app:answer_update' answer.id %}">
+        
+        {% for item in form %}
+            <div class="form-group">
+                <label>{{item.field.label}}</label>
+                {% if forloop.counter0 != 3 and forloop.counter0 != 2 %}
+                    <input name="{{item.name}}" type="{{item.field.widget.input_type}}" class="form-control {% if item.errors %} is-invalid {% endif %}" value="{% if item.value != None %}{{item.value|date:'Y-m-d'}}T{{item.value|date:'H:i'}}{% endif %}">
+                    {% if item.errors %}
+                        <div class="invalid-feedback">
+                           {{item.errors.0}}
+                       </div>
+                    {% endif %}
+                {% elif forloop.counter0 == 2 %}
+                    <input name="{{item.name}}" type="{{item.field.widget.input_type}}" class="form-control {% if item.errors %} is-invalid {% endif %}" value="{% if item.value != None %}{{item.value}}{% endif %}">
+                    {% if item.errors %}
+                        <div class="invalid-feedback">
+                           {{item.errors.0}}
+                       </div>
+                    {% endif %}
+                {% else %}
+                    {{form.correct_situation}}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button class="btn btn-primary" type="submit">登録</button>
+       　{% csrf_token %}
+    </form>
+    
+    <script>
+        $(document).on('change', ':file', function() {
+            var input = $(this);
+            file_name = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            label = document.getElementById('filename')
+            label.innerHTML = file_name
+            var input = $('#custom-file-1')
+            
+        });
+     </script>
+{% endblock %}

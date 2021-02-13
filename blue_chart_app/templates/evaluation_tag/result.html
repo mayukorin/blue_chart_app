@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>評価タグ検索結果</h2><br>
+    <div><span class="index">検索ワード</span>：{{keyword}}</div><br>
+    {% if problems_for_evaluation_keyword|length != 0 %}
+        {% for pfek in problems_for_evaluation_keyword %}
+            <div>
+                <span class="evaluation tag{{pfek.evaluation_tag__evaluation_type__id}}">
+                    {{pfek.evaluation_tag__content}}
+                </span>
+                
+                    <i class="far fa-thumbs-up eval"></i>{{pfek.total}}件&nbsp;
+                    <i class="far fa-thumbs-down eval"></i>{{pfek.bad_flag_count}}件&nbsp;
+                <a href="{% url 'blue_chart_app:problem_show' pfek.problem %}">{{pfek.problem__name}}</a>
+                
+                    
+                
+            </div><br>
+        {% endfor %}
+    {% else %}
+        に一致する評価タグはありませんでした
+    {% endif %}
+{% endblock %}
+
