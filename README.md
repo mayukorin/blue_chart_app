@@ -7,6 +7,13 @@
 
 画面設計が、Googleドライブのインターン生共有フォルダの「青チャートの画面設計（Django）」にある。 
 
+# データベース設計  
+![drawSQL-export-2021-02-13_15_27](https://user-images.githubusercontent.com/63027348/107843614-f8a41600-6e0f-11eb-9648-e881e5d88f2a.png)
+![drawSQL-export-2021-02-13_15_28](https://user-images.githubusercontent.com/63027348/107843624-2721f100-6e10-11eb-8c3d-434d21bbec78.png)
+![drawSQL-export-2021-02-13_15_29](https://user-images.githubusercontent.com/63027348/107843632-399c2a80-6e10-11eb-867e-a29a2c5517aa.png)
+
+
+
 # Requirement
 
 
